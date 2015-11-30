@@ -1,34 +1,40 @@
-include netwok
+include network
 
-class puppet_node_network (
-  $ipaddress  = '',
-  $subnet  = '',
-  $gateway = '',
-  $disabled_interfaces = '',
-  $trafic_interfaces = '',
-  $admin_interface = '',
+class node_network (
+  $disabled_interfaces = undef,
+  $traffic_interfaces  = undef,
+  $admin_interface     = undef,
+  $admin_ipaddress     = undef,
+  $admin_netmask       = undef,
+  $route_ipaddress     = undef,
+  $route_netmask       = undef,
+  $route_gateway       = undef,
 ) {
+  # Looping through all interfaces to determine which that should be disabled
+  # and which should be configured as traffic interfaces.
+  # This is configured in Hiera, if a interface is not present in Hiera it
+  # should remain untouched.
   each($::interfaces) |$interface| {
-    if $interface != 'lo' {
-      if $interface =~ $running_interfaces {
-        network::if::static { "$interface":
-          ensure    => 'up',
-          ipaddress => $ipaddress,
-          netmask   => '',
-        }
+    if $interface =~ $traffic_interfaces {
+      network::if::dynamic { "$interface":
+        ensure    => 'up',
       }
-      if $interface =~ $disabled_interfaces {
-        network::if::static { "$interface":
-          ensure    => 'up',
-          ipaddress => $ipaddress,
-          netmask   => '',
-        }
+    }
+    if $interface =~ $disabled_interfaces {
+      network::if::dynamic { "$interface":
+        ensure    => 'down',
       }
     }
   }
-  network::route { "$admin_interface":
+  # Configuring Admin interface, something that should always be pressent.
+  network::if::static { "$admin_interface":
+    ensure    => 'up',
     ipaddress => $admin_ipaddress,
-    netmask   => '',
-    gateway   => '',
+    netmask   => $admin_netmask,
+  }
+  network::route { "$admin_interface":
+    ipaddress => $route_ipaddress,
+    netmask   => $route_netmask,
+    gateway   => $route_gateway,
   }
 }
