@@ -1,5 +1,6 @@
 fixtures:
   repositories:
     stdlib: git://github.com/puppetlabs/puppetlabs-stdlib.git
+    network: git://github.com/razorsedge/puppet-network.git
   symlinks:
     node_network: "#{source_dir}"

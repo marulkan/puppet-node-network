@@ -14,15 +14,20 @@ class node_network (
   # and which should be configured as traffic interfaces.
   # This is configured in Hiera, if a interface is not present in Hiera it
   # should remain untouched.
-  each($::interfaces) |$interface| {
-    if $interface =~ $traffic_interfaces {
-      network::if::dynamic { $interface:
-        ensure    => 'up',
+  $interfaces_array = split($::interfaces, ',')
+  each($interfaces_array) |$interface| {
+    each($traffic_interfaces) |$traffic_interface| {
+      if $interface == $traffic_interface {
+        network::if::dynamic { $interface:
+          ensure    => 'up',
+        }
       }
     }
-    if $interface =~ $disabled_interfaces {
-      network::if::dynamic { $interface:
-        ensure    => 'down',
+    each($disabled_interfaces) |$disabled_interface| {
+      if $interface == $disabled_interface {
+        network::if::dynamic { $interface:
+          ensure    => 'down',
+        }
       }
     }
   }
