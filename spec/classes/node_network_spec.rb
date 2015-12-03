@@ -28,10 +28,7 @@ describe 'node_network', :type => 'define' do
             :owner  => 'root',
             :group  => 'root',
             :path   => '/etc/sysconfig/network-scripts/ifcfg-em1',
-        )}
-        it 'expect File[ifcfg-em1] to have required content' do
-            should contain_file('ifcfg-em1').with({
-                'content' => \
+            :content => \
 /DEVICE=em1
 BOOTPROTO=none
 HWADDR=fe:fe:fe:aa:aa:aa
@@ -42,12 +39,66 @@ IPADDR=1.2.3.4
 NETMASK=255.255.255.0
 PEERDNS=no
 NM_CONTROLLED=no/
-                })
-        end
-
-        it { should contain_file('ifcfg-em2') }
-        it { should contain_file('ifcfg-em3') }
-        it { should contain_file('ifcfg-p2p1') }
-        it { should contain_file('ifcfg-p2p2') }
+        )}
+        it { should contain_file('ifcfg-em2').with(
+            :ensure => 'present',
+            :mode   => '0644',
+            :owner  => 'root',
+            :group  => 'root',
+            :path   => '/etc/sysconfig/network-scripts/ifcfg-em2',
+            :content => \
+/DEVICE=em2
+BOOTPROTO=dhcp
+ONBOOT=no
+HOTPLUG=no
+TYPE=Ethernet
+PEERDNS=no
+NM_CONTROLLED=no/
+        )}
+        it { should contain_file('ifcfg-em3').with(
+            :ensure => 'present',
+            :mode   => '0644',
+            :owner  => 'root',
+            :group  => 'root',
+            :path   => '/etc/sysconfig/network-scripts/ifcfg-em3',
+            :content => \
+/DEVICE=em3
+BOOTPROTO=dhcp
+ONBOOT=no
+HOTPLUG=no
+TYPE=Ethernet
+PEERDNS=no
+NM_CONTROLLED=no/
+        )}
+        it { should contain_file('ifcfg-p2p1').with(
+            :ensure => 'present',
+            :mode   => '0644',
+            :owner  => 'root',
+            :group  => 'root',
+            :path   => '/etc/sysconfig/network-scripts/ifcfg-p2p1',
+            :content => \
+/DEVICE=p2p1
+BOOTPROTO=dhcp
+ONBOOT=yes
+HOTPLUG=yes
+TYPE=Ethernet
+PEERDNS=no
+NM_CONTROLLED=no/
+        )}
+        it { should contain_file('ifcfg-p2p2').with(
+            :ensure => 'present',
+            :mode   => '0644',
+            :owner  => 'root',
+            :group  => 'root',
+            :path   => '/etc/sysconfig/network-scripts/ifcfg-p2p2',
+            :content => \
+/DEVICE=p2p2
+BOOTPROTO=dhcp
+ONBOOT=yes
+HOTPLUG=yes
+TYPE=Ethernet
+PEERDNS=no
+NM_CONTROLLED=no/
+        )}
     end
 end
