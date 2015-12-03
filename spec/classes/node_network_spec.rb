@@ -30,20 +30,19 @@ describe 'node_network', :type => 'define' do
             :path   => '/etc/sysconfig/network-scripts/ifcfg-em1',
         )}
         it 'expect File[ifcfg-em1] to have required content' do
-            expect do
-                should verify_contents(catalogue, 'ifcfg-em1', [
-                    'DEVICE=em1',
-                    'BOOTPROTO=none',
-                    'HWADDR=fe:fe:fe:aa:aa:aa',
-                    'ONBOOT=yes',
-                    'HOTPLUG=yes',
-                    'TYPE=Ethernet',
-                    'IPADDR=1.2.3.4',
-                    'NETMASK=255.255.255.01',
-                    'PEERDNS=no',
-                    'NM_CONTROLLED=no',
-                ])
-            end
+            should contain_file('ifcfg-em1').with({
+                'content' => \
+/DEVICE=em1
+BOOTPROTO=none
+HWADDR=fe:fe:fe:aa:aa:aa
+ONBOOT=yes
+HOTPLUG=yes
+TYPE=Ethernet
+IPADDR=1.2.3.4
+NETMASK=255.255.255.0
+PEERDNS=no
+NM_CONTROLLED=no/
+                })
         end
 
         it { should contain_file('ifcfg-em2') }
