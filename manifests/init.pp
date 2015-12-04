@@ -16,30 +16,36 @@ class node_network (
   # should remain untouched.
   $interfaces_array = split($::interfaces, ',')
   each($interfaces_array) |$interface| {
-    each($traffic_interfaces) |$traffic_interface| {
-      if $interface == $traffic_interface {
-        network::if::dynamic { $interface:
-          ensure    => 'up',
+    if $traffic_interfaces {
+      each($traffic_interfaces) |$traffic_interface| {
+        if $node_network::interface == $traffic_interface {
+          network::if::dynamic { $node_network::interface:
+            ensure => 'up',
+          }
         }
       }
     }
-    each($disabled_interfaces) |$disabled_interface| {
-      if $interface == $disabled_interface {
-        network::if::dynamic { $interface:
-          ensure    => 'down',
+    if $disabled_interfaces {
+      each($disabled_interfaces) |$disabled_interface| {
+        if $node_network::interface == $disabled_interface {
+          network::if::dynamic { $node_network::interface:
+            ensure => 'down',
+          }
         }
       }
     }
   }
   # Configuring Admin interface, something that should always be pressent.
-  network::if::static { $admin_interface:
-    ensure    => 'up',
-    ipaddress => $admin_ipaddress,
-    netmask   => $admin_netmask,
-  }
-  network::route { $admin_interface:
-    ipaddress => $route_ipaddress,
-    netmask   => $route_netmask,
-    gateway   => $route_gateway,
+  if $admin_interface {
+    network::if::static { $admin_interface:
+      ensure    => 'up',
+      ipaddress => $admin_ipaddress,
+      netmask   => $admin_netmask,
+    }
+    network::route { $admin_interface:
+      ipaddress => $route_ipaddress,
+      netmask   => $route_netmask,
+      gateway   => $route_gateway,
+    }
   }
 }

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'node_network', :type => 'define' do
-    context "6 interfaces, 2 disabled, 2 traffic, 1 admin and 1 untouched." do
+    context "Everything enabled." do
         let :facts do
             {
                 :interfaces     => 'lo,em1,em2,em3,em4,p2p1,p2p2',
