@@ -1,14 +1,15 @@
 include network
 
 class node_network (
-  $disabled_interfaces = undef,
-  $traffic_interfaces  = undef,
-  $admin_interface     = undef,
-  $admin_ipaddress     = $::ipaddress,
-  $admin_netmask       = $::netmask,
-  $route_ipaddress     = undef,
-  $route_netmask       = undef,
-  $route_gateway       = undef,
+  $disabled_interfaces          = undef,
+  $traffic_interfaces           = undef,
+  $traffic_interfaces_bootproto = undef,
+  $admin_interface              = undef,
+  $admin_ipaddress              = $::ipaddress,
+  $admin_netmask                = $::netmask,
+  $route_ipaddress              = undef,
+  $route_netmask                = undef,
+  $route_gateway                = undef,
 ) {
   # Looping through all interfaces to determine which that should be disabled
   # and which should be configured as traffic interfaces.
@@ -21,6 +22,7 @@ class node_network (
         if $node_network::interface == $traffic_interface {
           network::if::dynamic { $node_network::interface:
             ensure => 'up',
+				bootproto => '$traffic_interfaces_bootproto',
           }
         }
       }
