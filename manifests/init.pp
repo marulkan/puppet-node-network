@@ -3,7 +3,7 @@ include network
 class node_network (
   $disabled_interfaces          = undef,
   $traffic_interfaces           = undef,
-  $traffic_interfaces_bootproto = undef,
+  $traffic_bootproto            = undef,
   $admin_interface              = undef,
   $admin_ipaddress              = $::ipaddress,
   $admin_netmask                = $::netmask,
@@ -22,7 +22,7 @@ class node_network (
         if $node_network::interface == $traffic_interface {
           network::if::dynamic { $node_network::interface:
             ensure => 'up',
-				bootproto => '$traffic_interfaces_bootproto',
+            bootproto => 'traffic_bootproto',
           }
         }
       }
