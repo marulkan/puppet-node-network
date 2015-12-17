@@ -22,7 +22,7 @@ class node_network (
         if $node_network::interface == $traffic_interface {
           network::if::dynamic { $node_network::interface:
             ensure => 'up',
-            bootproto => 'traffic_bootproto',
+            bootproto => '$traffic_bootproto',
           }
         }
       }
