@@ -1,5 +1,3 @@
-include network
-
 class node_network (
   $disabled_interfaces          = undef,
   $traffic_interfaces           = undef,
@@ -10,7 +8,15 @@ class node_network (
   $route_ipaddress              = undef,
   $route_netmask                = undef,
   $route_gateway                = undef,
+
+  # Managed network module (optional)
+  $manage_network               = true,
 ) {
+  # Manage network module?
+  if $manage_network {
+    class { 'network': }
+  }
+
   # Looping through all interfaces to determine which that should be disabled
   # and which should be configured as traffic interfaces.
   # This is configured in Hiera, if a interface is not present in Hiera it
