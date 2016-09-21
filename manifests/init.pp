@@ -21,26 +21,21 @@ class node_network (
   # and which should be configured as traffic interfaces.
   # This is configured in Hiera, if a interface is not present in Hiera it
   # should remain untouched.
+
   $interfaces_array = split($::interfaces, ',')
-  each($interfaces_array) |$interface| {
-    if $traffic_interfaces {
-      each($traffic_interfaces) |$traffic_interface| {
-        if $node_network::interface == $traffic_interface {
-          network::if::dynamic { $node_network::interface:
-            ensure => 'up',
-            bootproto => $traffic_bootproto,
-          }
-        }
-      }
+  if $traffic_interfaces {
+    $existing_ti = []
+    inline_template('<%= @interfaces_array.each { |interface| @traffic_interfaces.each { |traffic_interface| @existing_ti << interface if traffic_interface == interface }} %>')
+    network::if::dynamic { $existing_ti:
+      ensure => 'up',
+      bootproto => $traffic_bootproto,
     }
-    if $disabled_interfaces {
-      each($disabled_interfaces) |$disabled_interface| {
-        if $node_network::interface == $disabled_interface {
-          network::if::dynamic { $node_network::interface:
-            ensure => 'down',
-          }
-        }
-      }
+  }
+  if $disabled_interfaces {
+    $existing_di = []
+    inline_template('<%= @interfaces_array.each { |interface| @disabled_interfaces.each { |disabled_interface| @existing_di << interface if disabled_interface == interface }} %>')
+    network::if::dynamic { $existing_di:
+      ensure => 'down',
     }
   }
   # Configuring Admin interface, something that should always be pressent.
