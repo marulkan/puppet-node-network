@@ -11,12 +11,12 @@ describe 'node_network', :type => 'define' do
         end
         let :params do
             {
-                :admin_interface => 'em1',
-                :admin_ipaddress => '1.2.3.4',
-                :admin_netmask   => '255.255.255.0',
-                :route_ipaddress => ['4.3.2.1'],
-                :route_netmask   => ['255.255.255.0'],
-                :route_gateway   => ['4.3.2.254'],
+                :admin_interface   => 'em1',
+                :admin_ipaddress   => '1.2.3.4',
+                :admin_netmask     => '255.255.255.0',
+                :route_ipaddress   => ['4.3.2.1'],
+                :route_netmask     => ['255.255.255.0'],
+                :route_gateway     => ['4.3.2.254'],
             }
         end
         it { should contain_file('route-em1').with(
@@ -121,6 +121,8 @@ NM_CONTROLLED=no/
         let :params do
             {
                 :traffic_interfaces  => ['p2p1', 'p2p2'],
+                :admin_ipaddress   => '1.2.3.4',
+                :admin_netmask     => '255.255.255.0',
             }
         end
         it { should contain_file('ifcfg-p2p1').with(
@@ -172,6 +174,8 @@ NM_CONTROLLED=no/
         let :params do
             {
                 :disabled_interfaces => ['em2', 'em3'],
+                :admin_ipaddress   => '1.2.3.4',
+                :admin_netmask     => '255.255.255.0',
             }
         end
         it { should contain_file('ifcfg-em2').with(
