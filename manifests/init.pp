@@ -25,7 +25,7 @@ class node_network (
   $interfaces_array = split($::interfaces, ',')
   if $traffic_interfaces {
     $existing_ti = []
-    inline_template('<%= @interfaces_array.each { |interface| @traffic_interfaces.each { |traffic_interface| @existing_ti << interface if traffic_interface == interface }} %>')
+    $t1 = inline_template('<%= @interfaces_array.each { |interface| @traffic_interfaces.each { |traffic_interface| @existing_ti << interface if traffic_interface == interface }} %>')
     network::if::dynamic { $existing_ti:
       ensure => 'up',
       bootproto => $traffic_bootproto,
@@ -33,7 +33,7 @@ class node_network (
   }
   if $disabled_interfaces {
     $existing_di = []
-    inline_template('<%= @interfaces_array.each { |interface| @disabled_interfaces.each { |disabled_interface| @existing_di << interface if disabled_interface == interface }} %>')
+    $t2 = inline_template('<%= @interfaces_array.each { |interface| @disabled_interfaces.each { |disabled_interface| @existing_di << interface if disabled_interface == interface }} %>')
     network::if::dynamic { $existing_di:
       ensure => 'down',
     }
